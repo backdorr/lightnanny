@@ -1,10 +1,27 @@
 #!/usr/bin/python
 
-config = {}
-execfile("startup.cfg", config)
-
 import smtplib
 import socket
+import os
+import sys
+
+g_settings = [ \
+   'gmail_user="your_gmail_user"\n', \
+   'gmail_pass="your_gmail_pass"\n', \
+   'notification_recipients=["notification_recipient"]\n', \
+   ] 
+
+config = {}
+if os.path.isfile("startup.cfg"):
+   execfile("startup.cfg", config)
+else:
+   print "startup.cfg doesn't exist"
+   file = open("startup.cfg","w")
+   for item in g_settings:
+      file.write(item) 
+   print "created startup.cfg, please add your details"
+   sys.exit(0)
+
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(('google.com', 0))
 ipaddress = s.getsockname()[0]
